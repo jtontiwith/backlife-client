@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { firestore } from "../firebase";
 
 const StyledSelect = styled.select`
-  font-size: 14px;
+  font-size: 12px;
   margin-right: 10px;
   :focus {
     outline: none;
@@ -15,14 +15,18 @@ const Form = styled.form``;
 
 const Option = styled.option``;
 
-const Select = ({ id, option }) => {
+const Select = ({ id, option, getCategory }) => {
   const itemRef = firestore.doc(`items/${id}`);
-  const category = e => itemRef.update({ category: e.target.value });
+  const category = e => {
+    if (getCategory) return getCategory(e.target.value);
+    itemRef.update({ category: e.target.value });
+  };
 
   //set value
   const setSelect = option => {
     let el = document.getElementById("select");
-    el.value = option;
+    if (option) return (el.value = option);
+    el.value = "";
   };
 
   useEffect(() => {

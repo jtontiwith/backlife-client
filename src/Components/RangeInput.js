@@ -1,16 +1,23 @@
 import React, { useState } from "react";
 import { firestore } from "../firebase";
+import styled from "styled-components";
 import Form from "./Form";
 
-const RangeInput = ({ id, range }) => {
+const Div = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Input = styled.input`
+  font-size: 5px;
+`;
+
+const RangeInput = ({ id, range, getPriorityRange }) => {
   const itemRef = firestore.doc(`items/${id}`);
-  const setRange = e => itemRef.update({ priority: e.target.value });
-
-  //const [range, setRange] = useState(0);
-
-  /*const handleChange = e => {
-    setRange(e.target.value);
-  };*/
+  const setRange = e => {
+    if (!id && getPriorityRange) return getPriorityRange(e.target.value);
+    return itemRef.update({ priority: e.target.value });
+  };
 
   const priority = [
     "at some point",
@@ -22,9 +29,9 @@ const RangeInput = ({ id, range }) => {
   ];
 
   return (
-    <>
+    <Div>
       <Form>
-        <input
+        <Input
           className="range-input"
           onChange={setRange}
           type="range"
@@ -34,11 +41,8 @@ const RangeInput = ({ id, range }) => {
           value={range}
         />
       </Form>
-      <div>
-        <div>{`Level ${range}`}</div>
-        <div>{priority[range]}</div>
-      </div>
-    </>
+      <small>{`Level ${range} - ${priority[range]}`}</small>
+    </Div>
   );
 };
 

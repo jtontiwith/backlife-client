@@ -12,9 +12,14 @@ habit - something you do on an ongoign basis
 todo - 
 
 Ideas...
+  -filtering, on hover it shows and if you click it then it goes to all of that category
+  -Fire off, fire task off to x email addres, schedule follow up in ...?, 
   -backlog items show categorization and controls on hover
   -voice to written backlog item
   -make it a PWA
+  -Dalies Feature - checklist of things you wanna do daily
+    -and maybe that surfaces articles, enforcement mechanisms, etc.
+    -or or or perhaps this could be your set daily + your variable for the day
   -mTurk worker does something 
   -things to ponder and articulate wizard/tracker
   -what you should be doing Wizard?
@@ -34,7 +39,6 @@ https://colorhunt.co/palette/156756
 #eae9e9 - modeately light grey
 #d4d7dd - blue-ish grey
 #420000 - brown-maroonish
-=IMPORTRANGE("1c4m_aqbcj_d4xlleIaHJlu9Q9gS0-K_ANnuCrbb_9cw","PMDocket!A1:J3000")
 
 
 

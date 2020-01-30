@@ -13,10 +13,10 @@ const StyledTextArea = styled.textarea`
   font-size: 16px;
   line-height: 19px;
   display: inline-block;
-  margin: 12px 18px 0 17px;
   padding: 0;
   ::placeholder {
     color: #7e8b9c;
+    margin-left: 0px;
   }
 `;
 

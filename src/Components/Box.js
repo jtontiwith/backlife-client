@@ -6,6 +6,7 @@ const GenericBox = styled.div`
   border-radius: ${props => props.radius ? props.radius : '4px'}
   width: ${props => props.width ? props.width : null};
   max-width: ${props => props.maxWidth ? props.maxWidth : null};
+  min-width: ${props => props.minWidth ? props.minWidth : null};
   padding: ${props => props.padding ? props.padding : '20px'};    
   position: ${props => props.position ? props.position : 'static'};
   margin: ${props => props.margin ? props.margin : '10px'};
@@ -15,7 +16,9 @@ const GenericBox = styled.div`
   bottom: ${props => props.bottom ? props.bottom : null};
   box-shadow: ${props => props.boxShadow ? props.boxShadow : null};
   display: ${props => props.display ? props.display : null};
-  flex-direction: ${props => props.flexDirection ? props.flexDirection : null}
+  flex-direction: ${props => props.flexDirection ? props.flexDirection : null};
+  align-self:  ${props => props.alignSelf ? props.alignSelf : null};
+  border: ${props => props.border ? props.border : null}
 `;
 
 const Box = (props) => {
@@ -23,6 +26,7 @@ const Box = (props) => {
     <GenericBox 
       width={props.width}
       maxWidth={props.maxWidth}
+      minWidth={props.minWidth}
       padding={props.padding}
       position={props.position}
       background={props.background}
@@ -33,6 +37,8 @@ const Box = (props) => {
       boxShadow={props.boxShadow}
       display={props.display}
       flexDirection={props.flexDirection}
+      alignSelf={props.alignSelf}
+      border={props.border}
     >
       { props.children }
     </GenericBox>

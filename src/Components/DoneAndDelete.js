@@ -15,30 +15,28 @@ const IconContainerButton = styled.button`
   outline: inherit;
 `;
 
-const DoneAndDelete = ({ hovered, id }) => {
+const Div = styled.div``;
+
+const DoneAndDelete = ({ id }) => {
   const itemRef = firestore.doc(`items/${id}`);
   const remove = () => itemRef.delete();
-
-  if (hovered) {
-    return (
-      <>
-        <IconContainerButton>
-          <FontAwesomeIcon
-            icon={faCheckSquare}
-            style={{ fontSize: "23px", color: "#d4d7dd", marginRight: "6px" }}
-          />
-        </IconContainerButton>
-        <IconContainerButton>
-          <FontAwesomeIcon
-            icon={faMinusCircle}
-            style={{ fontSize: "23px", color: "#d4d7dd" }}
-            onClick={remove}
-          />
-        </IconContainerButton>
-      </>
-    );
-  }
-  return null;
+  return (
+    <Div>
+      <IconContainerButton>
+        <FontAwesomeIcon
+          icon={faCheckSquare}
+          style={{ fontSize: "23px", color: "#d4d7dd", marginRight: "6px" }}
+        />
+      </IconContainerButton>
+      <IconContainerButton>
+        <FontAwesomeIcon
+          icon={faMinusCircle}
+          style={{ fontSize: "23px", color: "#d4d7dd" }}
+          onClick={remove}
+        />
+      </IconContainerButton>
+    </Div>
+  );
 };
 
 export default DoneAndDelete;

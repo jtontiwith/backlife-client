@@ -7,32 +7,58 @@ import { Link } from "react-router-dom";
 /* start Styling */
 
 const LogoText = styled.h1`
-  font-size: 30px;
-  margin: 0 0 -8px 0;
+  font-size: ${props => (props.home ? "40px" : "31px")};
+  margin: ${props => (props.home ? "0 0 -15px 0" : "0px")}
   padding: 0;
+  color: ${props => (props.home ? "#FFF" : "#000")};
 `;
 
 const Span = styled.span`
   margin-bottom: 25px;
+  color: ${props => (props.home ? "#FFF" : "#000")};
+  font-size: 13px;
+`;
+
+const Div = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  box-shadow: inset 0 -1px 0 rgba(100, 121, 143, 0.122);
 `;
 
 /* end Styling */
 
-const Header = () => {
+const Header = ({ home }) => {
   return (
-    <>
-      <Link to="/" style={{ textDecoration: "none", color: "#000" }}>
-        <LogoText>
+    <Div>
+      <Link to="/dashboard" style={{ textDecoration: "none", color: "#000" }}>
+        <LogoText home={home}>
           <FontAwesomeIcon
             icon={faCaretLeft}
-            style={{ fontSize: "35px", verticalAlign: "-18%" }}
+            style={{
+              color: home ? "#FFF" : "#000",
+              fontSize: home ? "45px" : "35px",
+              verticalAlign: "-17%"
+            }}
           />
           BackLife
         </LogoText>
-        <Span style={{ fontSize: "10px" }}>a backlog that solves problems</Span>
+        {home ? <Span home={home}>a backlog that solves problems</Span> : null}
       </Link>
-      <Link to="/login">login</Link>
-    </>
+      <Link
+        style={{
+          color: home ? "#FFF" : "#000",
+          alignSelf: "center",
+          textDecoration: "none"
+        }}
+        to="/login"
+      >
+        login
+      </Link>
+    </Div>
   );
 };
 

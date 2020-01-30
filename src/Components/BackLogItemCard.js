@@ -34,10 +34,6 @@ const BackLogItemCard = ({ item }) => {
           <Select id={item.id} option={item.category} />
           <RangeInput id={item.id} range={item.priority} />
         </Box>
-        <p>Help?</p>
-        <p>
-          <button>add to gCal</button>
-        </p>
         <TextArea
           value=""
           placeholder="make notes..."
