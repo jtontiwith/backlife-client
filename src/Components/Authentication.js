@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
-import CurrentUser from "./CurrentUser";
+import { withRouter } from "react-router-dom";
+//import CurrentUser from "./CurrentUser";
 import SignUpAndSignIn from "./SignUpAndSignIn";
 import { UserContext } from "../Providers/UserProvider";
 
-const Authentication = ({ loading }) => {
+const Authentication = withRouter(({ loading, history }) => {
   const { user } = useContext(UserContext);
   if (loading) return null;
-  return <>{user ? <CurrentUser user={user} /> : <SignUpAndSignIn />}</>;
-};
+  return <>{user ? history.push("/dashboard") : <SignUpAndSignIn />}</>;
+});
 
 export default Authentication;

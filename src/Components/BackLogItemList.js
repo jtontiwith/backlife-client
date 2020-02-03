@@ -6,17 +6,26 @@ import { ItemsContext } from "../Providers/ItemsProvider";
 import styled from "styled-components";
 
 const Div = styled.div`
-  margin-bottom: 2px;
   border-radius: ${props => (props.radius ? props.radius : "10px")}
   background-color: #FFFFFF;
   display: flex;  
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  border: 1px solid black;
-  padding: 10px 0 10px 0;
   box-sizing: border-box;
+  height: 30px;
   `;
+
+const TagButton = styled.button`
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  `;
+
 
 const P = styled.p``;
 
@@ -24,7 +33,7 @@ const BackLogItemList = () => {
   const value = useContext(ItemsContext);
   const [hover, setHover] = useState({ hovered: false, id: "" });
 
-  const itemsArray = value.state.items.map((item, index) => {
+  const itemsArray = value.itemState.items.map((item, index) => {
     /* let radius;
       if (index === 0 && itemsArrLength === 1) {
         //round the corners on first and last items
@@ -46,7 +55,7 @@ const BackLogItemList = () => {
         onClick={e => value.handleEvent(e, index)}
       >
         <BackLogItem text={item.title} />
-        {hover.id === item.id ? <DoneAndDelete id={item.id} /> : null}
+        {hover.id === item.id ? <><TagButton>{item.category}</TagButton> <DoneAndDelete id={item.id} /></> : null}
       </Div>
     );
   });

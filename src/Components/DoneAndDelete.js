@@ -15,7 +15,9 @@ const IconContainerButton = styled.button`
   outline: inherit;
 `;
 
-const Div = styled.div``;
+const Div = styled.div`
+  padding-right: 15px;
+`;
 
 const DoneAndDelete = ({ id }) => {
   const itemRef = firestore.doc(`items/${id}`);

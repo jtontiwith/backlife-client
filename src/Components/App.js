@@ -1,5 +1,6 @@
 import React from "react";
 import Authentication from "./Authentication";
+import CurrentUser from "./CurrentUser";
 import DashBoard from "./DashBoard";
 import Header from "./Header";
 import Home from "./Home";
@@ -28,6 +29,7 @@ const App = withRouter(({ location }) => {
               <Route exact path="/profile" component={UserProfile} />
               <Route exact path="/items/:id" component={BackLogItemPage} />
               <Route exact path="/login" component={Authentication} />
+              <Route exact path="/logout" component={CurrentUser} />
             </Div>
           </Switch>
         </section>

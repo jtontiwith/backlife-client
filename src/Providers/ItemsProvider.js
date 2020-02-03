@@ -6,17 +6,17 @@ import { UserContext } from "../Providers/UserProvider";
 export const ItemsContext = createContext({ items: [] });
 
 const ItemsProvider = ({ children }) => {
-  const [state, setState] = useState({ items: [], indexToShow: null });
-
-  const { user } = useContext(UserContext);
+  const [itemState, setState] = useState({ items: [], indexToShow: null });
 
   const handleEvent = (e, index) => {
     console.log("index here", index);
     setState({
-      ...state,
+      ...itemState,
       indexToShow: index
     });
   };
+
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (user === null) return setState({ items: [], indexToShow: null });
@@ -28,7 +28,7 @@ const ItemsProvider = ({ children }) => {
         const items = snapshot.docs.map(collectIdsAndDocs);
         console.log("user inside effect", user);
         setState({
-          ...state,
+          ...itemState,
           items: items
         });
 
@@ -42,7 +42,7 @@ const ItemsProvider = ({ children }) => {
     <>
       <ItemsContext.Provider
         value={{
-          state,
+          itemState,
           handleEvent
         }}
       >

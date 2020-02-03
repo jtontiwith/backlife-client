@@ -39,11 +39,12 @@ const Div = styled.div`
 `;
 
 const ItemWriter = styled.div`
-  width: 500px;
   height: 50px;
   border: 1.5px solid #eae9e9
   transition: all 0.1s linear;
+  border-radius: 3px;
   padding: 10px;
+  margin-bottom: 15px;
 `;
 
 const DashBoard = () => {
@@ -157,9 +158,9 @@ const DashBoard = () => {
           </Box>
         </section>
         <section className="column">
-          {value.state.indexToShow !== null ? (
+          {value.itemState.indexToShow !== null ? (
             <BackLogItemCard
-              item={value.state.items[value.state.indexToShow]}
+              item={value.itemState.items[value.itemState.indexToShow]}
             />
           ) : null}
         </section>

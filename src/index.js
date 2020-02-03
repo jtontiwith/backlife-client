@@ -20,6 +20,11 @@ Ideas...
   -Dalies Feature - checklist of things you wanna do daily
     -and maybe that surfaces articles, enforcement mechanisms, etc.
     -or or or perhaps this could be your set daily + your variable for the day
+    DESING NOTE for the above:
+      -these options will sit right beneath the controls and when you 
+      hit the controls roll down it'll cover them, and then that way
+      the items list doesn't move either
+  
   -mTurk worker does something 
   -things to ponder and articulate wizard/tracker
   -what you should be doing Wizard?

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import { signOut } from "../firebase";
+import { UserContext } from "../Providers/UserProvider";
 
 /* start Styling */
 
@@ -29,9 +31,48 @@ const Div = styled.div`
   box-shadow: inset 0 -1px 0 rgba(100, 121, 143, 0.122);
 `;
 
+const Button = styled.button`
+  color: home ? "#FFF" : "#000",
+  alignSelf: "center",
+  textDecoration: "none"
+`;
+
 /* end Styling */
 
-const Header = ({ home }) => {
+const Header = withRouter(({ home, history, location }) => {
+  const { clearUserObj } = useContext(UserContext)
+  async function logOut() {
+    try {
+      await signOut();
+      clearUserObj();
+      return history.push("/");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  //const logOut = () => signOut().then(() => history.push("/"))
+
+  let logInOut;
+  if (location.pathname === "/dashboard") {
+    logInOut = <Button onClick={logOut}>logout</Button>;
+  } else if (location.pathname === "/") {
+    logInOut = (
+      <Link
+        style={{
+          color: home ? "#FFF" : "#000",
+          alignSelf: "center",
+          textDecoration: "none"
+        }}
+        to="/login"
+      >
+        login
+      </Link>
+    );
+  } else {
+    logInOut = null;
+  }
+
   return (
     <Div>
       <Link to="/dashboard" style={{ textDecoration: "none", color: "#000" }}>
@@ -48,18 +89,9 @@ const Header = ({ home }) => {
         </LogoText>
         {home ? <Span home={home}>a backlog that solves problems</Span> : null}
       </Link>
-      <Link
-        style={{
-          color: home ? "#FFF" : "#000",
-          alignSelf: "center",
-          textDecoration: "none"
-        }}
-        to="/login"
-      >
-        login
-      </Link>
+      {logInOut}
     </Div>
   );
-};
+});
 
 export default Header;

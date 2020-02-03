@@ -6,6 +6,8 @@ export const UserContext = createContext({ user: null });
 const UserProvider = ({ children }) => {
   const [state, setState] = useState({ user: null });
 
+  const clearUserObj = () => setState({ user: null })
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async user => {
       if (user) {
@@ -26,7 +28,7 @@ const UserProvider = ({ children }) => {
   return (
     <>
       {console.log("hey from users provider")}
-      <UserContext.Provider value={state}>{children}</UserContext.Provider>
+      <UserContext.Provider value={{ user: state.user, clearUserObj }}>{children}</UserContext.Provider>
     </>
   );
 };

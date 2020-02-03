@@ -5,8 +5,9 @@ const StyledTextArea = styled.textarea`
   background-color: ${props =>
     props.backgroundColor ? props.backgroundColor : null};
   border: none;
-  width: 65%;
+  width: 100%;
   overflow: auto;
+  height: ${props => props.height ? props.height : null}
   outline: none;
   box-shadow: none;
   resize: none;
@@ -20,11 +21,12 @@ const StyledTextArea = styled.textarea`
   }
 `;
 
-const TextArea = ({ handleEvent, value, placeholder, backgroundColor }) => {
+const TextArea = ({ handleEvent, value, placeholder, backgroundColor, height }) => {
   return (
     <StyledTextArea
       value={value.text}
       onChange={handleEvent}
+      height={height}
       placeholder={placeholder}
       backgroundColor={backgroundColor}
     ></StyledTextArea>

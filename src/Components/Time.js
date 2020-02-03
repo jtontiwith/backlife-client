@@ -2,11 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledTime = styled.time`
-  width: 50px;
+  width: 75px;
   min-width: 50px;
-  height: 50px;
+  height: 65px;
+  font-size: 18px;
   margin-left: 10px;
-  background-color: #f9f4f4;
+  background-color: #F4F6F9;
   border-radius: 2px;
   display: flex;
   align-items: center;
