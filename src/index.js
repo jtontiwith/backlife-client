@@ -12,9 +12,14 @@ habit - something you do on an ongoign basis
 todo - 
 
 Ideas...
+  -the wizards could sort of autopopulate questions from inside
+   the textarea just like a slick typeform does - that'd be it
+    -maybe you are draggin items into certain buckets that are time bound, behavior forcing function, etc. 
+  -days ago on hover for the date 
   -filtering, on hover it shows and if you click it then it goes to all of that category
   -Fire off, fire task off to x email addres, schedule follow up in ...?, 
   -backlog items show categorization and controls on hover
+  -dashboard mashup of 5 habits, 9 goals, and 21 todos, SCOREBOARD
   -voice to written backlog item
   -make it a PWA
   -Dalies Feature - checklist of things you wanna do daily

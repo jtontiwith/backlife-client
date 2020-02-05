@@ -119,10 +119,6 @@ const DashBoard = () => {
   };
 
   const handler = e => {
-    console.log("always");
-    console.log(state);
-    console.log(stateRef.current);
-
     if (itemWriterRef.current && itemWriterRef.current.contains(e.target)) {
       itemWriterRef.current.style.height = "120px";
       setState({ ...stateRef.current, showControls: true });
@@ -139,7 +135,6 @@ const DashBoard = () => {
     };
   }, []);
 
-  console.log("LOCAL STATE DBOARD", state);
   return (
     <>
       <section className="row">
@@ -158,9 +153,9 @@ const DashBoard = () => {
           </Box>
         </section>
         <section className="column">
-          {value.itemState.indexToShow !== null ? (
+          {value.itemState.itemToShow !== null ? (
             <BackLogItemCard
-              item={value.itemState.items[value.itemState.indexToShow]}
+              item={value.itemState.itemToShow}
             />
           ) : null}
         </section>

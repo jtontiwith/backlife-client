@@ -85,7 +85,7 @@ const Header = withRouter(({ home, history, location }) => {
               verticalAlign: "-17%"
             }}
           />
-          BackLife
+          LifeLog
         </LogoText>
         {home ? <Span home={home}>a backlog that solves problems</Span> : null}
       </Link>

@@ -1,25 +1,50 @@
-import React, { useState, createContext, useEffect, useContext } from "react";
+import React, { useReducer, createContext, useEffect, useContext } from "react";
 import { firestore } from "../firebase";
 import { collectIdsAndDocs } from "../utils";
 import { UserContext } from "../Providers/UserProvider";
 
 export const ItemsContext = createContext({ items: [] });
 
-const ItemsProvider = ({ children }) => {
-  const [itemState, setState] = useState({ items: [], indexToShow: null });
+const reducer = (itemState, action) => {
+  switch (action.type) {
+    case 'getItems':
+      return { ...itemState, items: action.payload }
+    case 'user null':
+      return { ...action.payload }
+    case 'set category':
+      return {
+        ...itemState,
+        filter: action.payload
+      }
+    case 'unset category':
+      return {
+        ...itemState,
+        filter: null
+      }
+    case 'show card':
+      return {
+        ...itemState,
+        itemToShow: itemState.items.filter(item => item.id === action.payload)[0]
+      }
+  }
+}
 
+const ItemsProvider = ({ children }) => {
+  const [itemState, dispatch] = useReducer(reducer, { items: [], itemToShow: null, filter: null });
+  /*
   const handleEvent = (e, index) => {
     console.log("index here", index);
     setState({
       ...itemState,
       indexToShow: index
     });
-  };
+  };*/
 
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    if (user === null) return setState({ items: [], indexToShow: null });
+    console.log('does this run?')
+    if (user === null) return dispatch({ type: "user null", payload: { items: [], itemToShow: null, filter: null } });
     const unsubscribeFromFirestore = firestore
       .collection("items")
       .where("user.uid", "==", user.uid)
@@ -27,10 +52,12 @@ const ItemsProvider = ({ children }) => {
         console.log("hi from inside here");
         const items = snapshot.docs.map(collectIdsAndDocs);
         console.log("user inside effect", user);
-        setState({
+        dispatch({ type: 'getItems', payload: items })
+
+        /*setState({
           ...itemState,
           items: items
-        });
+        });*/
 
         return function cleanup() {
           unsubscribeFromFirestore();
@@ -43,7 +70,8 @@ const ItemsProvider = ({ children }) => {
       <ItemsContext.Provider
         value={{
           itemState,
-          handleEvent
+          //handleEvent
+          dispatch
         }}
       >
         {children}

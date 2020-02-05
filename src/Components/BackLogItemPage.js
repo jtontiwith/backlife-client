@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ItemsContext } from "../Providers/ItemsProvider";
-import BackLogItemCard from "./BackLogItemCard";
 import { UserContext } from "../Providers/UserProvider";
 import { firestore } from "../firebase";
 import { collectIdsAndDocs } from "../utils";
