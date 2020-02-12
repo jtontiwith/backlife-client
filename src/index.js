@@ -12,11 +12,35 @@ habit - something you do on an ongoign basis
 todo - 
 
 Ideas...
+  YOUR ULTIMATE FORMULA IS SOFTWARE CRAFTSMANSHIP 6-7 P/DAY, PHYSICAL CHRAFTSMAN SHIP 2-3 - AND FUCKING PUBLISH ABOUT IT - THAT'S IT, THAT'S ALL - BIT AND ATOMS
+  when you write the todo, goal, etc. it can blink on then fade into either Today or General, or pop below and rocket up into, or maybe today or general blink of sorts, OR they come open as lists
+  -notifications and undo when you delete
+  -EDIT!!!!!
+  -add Rewards Feature
+  -want to be able to add a task for tomorrow
+  -clear the dropdown <-will probably resolve itself
+  -code split out firebase so you you aren't getting it when 
+  a user hits the homepage
+  -before I dive into 5yr, 1yr, 1m, 1w, 1d, let's do today and the future
+  -make "make notes" work
+  -make show and tell feature, you can go in and look at the app (video) appears
+  to your right, and it shows how it's used 
+  -schedule your time
+    -you have to "meet" with yourself daily - pick a time, this
+    could be on the "Today's log" bar and could be super important
+  -make it so the most recently created one pops on the right
+  -make a filter for priority across all and individually as well
+  -colored radio-ish buttons to switch between categories at the top
+  -make duedate recorder and display
+  -have tne name of the sole category list pop on filtering
   -the wizards could sort of autopopulate questions from inside
    the textarea just like a slick typeform does - that'd be it
     -maybe you are draggin items into certain buckets that are time bound, behavior forcing function, etc. 
   -days ago on hover for the date 
   -filtering, on hover it shows and if you click it then it goes to all of that category
+  -so when you replace the dropdown with little tag like things you
+  shoudl be able to tab to them and through them, even arrow keys
+  
   -Fire off, fire task off to x email addres, schedule follow up in ...?, 
   -backlog items show categorization and controls on hover
   -dashboard mashup of 5 habits, 9 goals, and 21 todos, SCOREBOARD
@@ -54,70 +78,13 @@ https://colorhunt.co/palette/156756
 
 */
 
-const fakeData = [
-  {
-    id: "123",
-    title: "call Miriam to set up meeting",
-    description:
-      "Set up a meeting with Miriam to find how how much the company currently owes in taxes, ask if I can count on her to let me know everything we have to do to keep the company compliant, form up a rough tax plan, payment plan, asset justification plan moving forward.",
-    date: new Date(),
-    help: false,
-    category: "todo",
-    priority: 5,
-    notes: ""
-  } /*,
-  {
-    text: 'buy plywood to top microgreens rows',
-    description: 'got to homecenter, by the wood and have it cut',
-    date: new Date(),
-    help: false,
-    category: 'todo',
-    priority: 5,
-    notes: ''
-  },
-  {
-    text: 'find gardening book and read',
-    description: 'find the book, set aside time to read it and increase your knowledge of farming.',
-    date: new Date(),
-    help: false,
-    category: 'habit',
-    priority: 5,
-    notes: ''
-  },
-  {
-    text: 'get a job',
-    description: 'apply for react jobs, fullstack js jobs, etc.',
-    date: new Date(),
-    help: false,
-    category: 'goal',
-    priority: 5,
-    notes: ''
-  },
-  {
-    text: 'interview with FII.org',
-    description: 'prep for the interview',
-    date: new Date(),
-    help: false,
-    category: 'appt',
-    priority: 5,
-    notes: ''
-  },
-  {
-    text: 'make a budget!',
-    description: 'subscribe to a service (YNAB?) and start keeping track of all your damn expenses.',
-    date: new Date(),
-    help: false,
-    category: 'habit',
-    priority: 5,
-    notes: ''
-  }*/
-];
+
 
 ReactDOM.render(
   <Router>
     <UserProvider>
       <ItemsProvider>
-        <App data={fakeData} />
+        <App />
       </ItemsProvider>
     </UserProvider>
   </Router>,

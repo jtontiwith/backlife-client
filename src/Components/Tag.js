@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const tagColors = {
+    'todo - today': '#FF6611',
     todo: '#3CAAF5',
     goal: '#A01AA5',
     habit: '#3750B5',

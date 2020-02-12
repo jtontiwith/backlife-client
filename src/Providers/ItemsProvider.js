@@ -3,12 +3,12 @@ import { firestore } from "../firebase";
 import { collectIdsAndDocs } from "../utils";
 import { UserContext } from "../Providers/UserProvider";
 
-export const ItemsContext = createContext({ items: [] });
+export const ItemsContext = createContext({ items: [], itemsToday: [] });
 
 const reducer = (itemState, action) => {
   switch (action.type) {
     case 'getItems':
-      return { ...itemState, items: action.payload }
+      return { ...itemState, items: action.payload, itemsToday: action.payload.filter(item => item.category === 'todo - today') }
     case 'user null':
       return { ...action.payload }
     case 'set category':
@@ -30,7 +30,7 @@ const reducer = (itemState, action) => {
 }
 
 const ItemsProvider = ({ children }) => {
-  const [itemState, dispatch] = useReducer(reducer, { items: [], itemToShow: null, filter: null });
+  const [itemState, dispatch] = useReducer(reducer, { items: [], itemsToday: [], itemToShow: null, filter: null });
   /*
   const handleEvent = (e, index) => {
     console.log("index here", index);
@@ -44,7 +44,7 @@ const ItemsProvider = ({ children }) => {
 
   useEffect(() => {
     console.log('does this run?')
-    if (user === null) return dispatch({ type: "user null", payload: { items: [], itemToShow: null, filter: null } });
+    if (user === null) return dispatch({ type: "user null", payload: { items: [], itemsToday: [], itemToShow: null, filter: null } });
     const unsubscribeFromFirestore = firestore
       .collection("items")
       .where("user.uid", "==", user.uid)
@@ -64,6 +64,8 @@ const ItemsProvider = ({ children }) => {
         };
       });
   }, [user]);
+
+  console.log(itemState)
 
   return (
     <>

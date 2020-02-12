@@ -1,52 +1,84 @@
 import React, { useContext, useState } from "react";
 import BackLogItem from "./BackLogItem";
-import Box from "./Box";
-import DoneAndDelete from "./DoneAndDelete";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { ItemsContext } from "../Providers/ItemsProvider";
 import styled from "styled-components";
-import Tag from "./Tag";
 
-
-const Div = styled.div`
-  border-radius: ${props => (props.radius ? props.radius : "10px")}
-  background-color: #FFFFFF;
-  display: flex;  
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  box-sizing: border-box;
-  height: 30px;
+const Span = styled.span`
+  color: #7e8b9c;
+  text-decoration: underline;
+  margin-bottom: 15px;
+  display: block;
   `;
+
+const Header = styled.header`
+  background-color: #F4F6F9;
+  border-radius: 3px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 7px 7px 7px 7px;
+  margin-bottom: 4px;
+  `;
+
+const P = styled.p`
+  font-size: 20px;
+  padding: 0;
+  margin 0 0 0 15px;
+`;
 
 const BackLogItemList = () => {
   const value = useContext(ItemsContext);
-  const [hover, setHover] = useState({ hovered: false, id: "" });
+  const [showList, setShowList] = useState({
+    todays: false,
+    general: false
+  })
 
   const filterByCategory = (item) => {
     if (value.itemState.filter === null) {
-      return item
+      return item;
     } else if (value.itemState.filter) {
       return item.category === value.itemState.filter
     } //note: you filtered here b/c doing it in ItemsProvider > reducer
   } //seemed like more trouble/complexity than it was worth evem though this may be less performant 
 
-  const itemsArray = value.itemState.items.filter(filterByCategory).map((item, index) => {
-    return (
-      <Div
-        key={item.id}
-        id={item.id}
-        onMouseEnter={e => setHover({ hovered: true, id: item.id })}
-        onMouseLeave={() => setHover(false)}
-      >
-        <BackLogItem id={item.id} text={item.title} />
-        {hover.id === item.id ? <><Tag category={item.category} onClick={() => value.dispatch({ type: 'set category', payload: item.category })}>{item.category}</Tag> <DoneAndDelete id={item.id} /></> : null}
-      </Div>
-    );
-  });
+  const makeReactEl = (item) => <BackLogItem id={item.id} text={item.title} category={item.category} />
 
-  return <>
-    <div onClick={() => value.dispatch({ type: 'unset category', payload: null })}>back</div>
-    {itemsArray}</>;
+  const itemsArray = value.itemState.items.filter(filterByCategory).map(makeReactEl);
+  const itemsTodayArray = value.itemState.itemsToday.map(makeReactEl);
+  return (
+    <>
+      <Header>
+        <FontAwesomeIcon
+          icon={showList.todays === false ? faPlus : faMinus}
+          onClick={() => setShowList({ ...showList, todays: !showList.todays })}
+          style={{
+            color: "#000",
+            fontSize: "35px",
+            fontWeight: "300"
+          }}
+        />
+        <P>Today's Log</P>
+      </Header>
+      {showList.todays ? itemsTodayArray : null}
+      <Header>
+        <FontAwesomeIcon
+          icon={showList.general === false ? faPlus : faMinus}
+          onClick={() => setShowList({ ...showList, general: !showList.general })}
+          style={{
+            color: "#000",
+            fontSize: "35px",
+            fontWeight: "300"
+          }}
+        />
+        <P>General Log</P>
+      </Header>
+      {value.itemState.filter !== null && showList.general ? <Span onClick={() => value.dispatch({ type: 'unset category', payload: null })}>back</Span> : null}
+      {showList.general ? itemsArray : null}
+    </>);
 };
 
 export default BackLogItemList;

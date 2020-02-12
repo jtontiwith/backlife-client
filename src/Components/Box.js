@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const GenericBox = styled.div`
   background: ${props => (props.background ? props.background : "#FFFFFF")}; 
+  color: ${props => (props.color ? props.color : "#000")};   
   border-radius: ${props => (props.radius ? props.radius : "3px")}
   width: ${props => (props.width ? props.width : null)};
   max-width: ${props => (props.maxWidth ? props.maxWidth : null)};
@@ -37,6 +38,7 @@ const Box = props => {
       padding={props.padding}
       position={props.position}
       background={props.background}
+      color={props.color}
       margin={props.margin}
       radius={props.radius}
       height={props.height}

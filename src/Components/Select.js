@@ -37,6 +37,7 @@ const Select = ({ id, option, getCategory }) => {
     <Form>
       <StyledSelect id="select" onChange={category}>
         <Option value="">-choose a category-</Option>
+        <Option value="todo - today">todo - today</Option>
         <Option value="todo">todo</Option>
         <Option value="goal">goal</Option>
         <Option value="habit">habit</Option>

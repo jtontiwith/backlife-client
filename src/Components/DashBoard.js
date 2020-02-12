@@ -142,12 +142,14 @@ const DashBoard = () => {
           <ItemWriter id="item-writer" ref={itemWriterRef}>
             <TextArea
               value={state.value}
-              placeholder="log an item..."
+              placeholder="log a todo, goal, or habit..."
               onChange={handleEvent}
             />
-
             {state.showControls ? itemControls : null}
           </ItemWriter>
+          {/*<Box padding="5px" background="seagreen" color="#ffffff">What goals, habits, etc. could you adopt?
+            <Box padding="5px" width="40%">Habits from top authors</Box>
+          </Box>*/}
           <Box margin="0" padding="0">
             <BackLogItemList />
           </Box>

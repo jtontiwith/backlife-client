@@ -35,6 +35,7 @@ const BackLogItemCard = ({ item }) => {
           <RangeInput id={item.id} range={item.priority} />
           <Link to={`/items/${item.id}`}>published item</Link>
         </Box>
+        {item.category === 'goal' ? <p>create a daily fixed todo to march on this goal!</p> : null}
         <TextArea
           height="80px"
           value=""
