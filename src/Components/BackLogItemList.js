@@ -13,6 +13,23 @@ const Span = styled.span`
   display: block;
   `;
 
+const H2 = styled.h2`
+  width: 100%; 
+  text-align: center; 
+  border-bottom: 1px solid #F4F6F9; 
+  line-height: 0.1em;
+  margin: 5px 0 5px 0; 
+  font-size: 15px;
+  font-weight: 500;
+  
+`;
+
+const H2Span = styled.span`
+  background: #fff; 
+  padding: 0 10px; 
+  color: #c3c6c9;
+`;
+
 const Header = styled.header`
   background-color: #F4F6F9;
   border-radius: 3px;
@@ -21,7 +38,7 @@ const Header = styled.header`
   flex-direction: row;
   align-items: center;
   padding: 7px 7px 7px 7px;
-  margin-bottom: 4px;
+  margin-bottom: 15px;
   `;
 
 const P = styled.p`
@@ -29,6 +46,12 @@ const P = styled.p`
   padding: 0;
   margin 0 0 0 15px;
 `;
+
+const TestDiv = styled.div`
+  border-left: 5px solid black;
+  padding-left: 15px;
+`;
+
 
 const BackLogItemList = () => {
   const value = useContext(ItemsContext);
@@ -63,7 +86,15 @@ const BackLogItemList = () => {
         />
         <P>Today's Log</P>
       </Header>
-      {showList.todays ? itemsTodayArray : null}
+      {showList.todays ?
+        <>
+          <H2><H2Span>fixed</H2Span></H2>
+          You have 0 fixed items. Find out about fixed items.
+          <H2><H2Span>variable</H2Span></H2>
+          {itemsTodayArray}
+        </>
+        : null}
+      {/*showList.todays ? <TestDiv>{itemsTodayArray}</TestDiv> : null*/}
       <Header>
         <FontAwesomeIcon
           icon={showList.general === false ? faPlus : faMinus}
