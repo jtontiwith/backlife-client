@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ItemsContext } from "../Providers/ItemsProvider";
 import { UserContext } from "../Providers/UserProvider";
-import ItemsProvider from "../Providers/ItemsProvider";
 import { firestore, auth } from "../firebase";
 import firebase from "../firebase";
 import styled from "styled-components";
@@ -49,6 +48,8 @@ const ItemWriter = styled.div`
 
 const DashBoard = () => {
   const value = useContext(ItemsContext);
+  const itemsArrayLength = value.itemState.items.length;
+  const itemsTodayArrayLength = value.itemState.itemsToday.length;
   const itemWriterRef = useRef();
 
   const [state, setState] = useState({
@@ -58,19 +59,21 @@ const DashBoard = () => {
     showControls: null
   });
 
+  const [justAdded, setJustAdded] = useState();
+
   const stateRef = useRef();
   stateRef.current = state;
 
   /* end useState's */
 
-  const handleEvent = event => {
+  const handleEvent = (event, itemsArrayLength) => {
     let { type } = event;
     const { value, category, priority } = state;
     switch (type) {
       case "change":
         return setState({ ...state, value: event.target.value });
       case "click":
-        postItem(value, category, priority); //category here and down below
+        postItem(value, category, priority, itemsArrayLength, itemsTodayArrayLength); //category here and down below
         return setState({ ...state, value: "", category: "" });
       case "mouseover":
         console.log("yeeaa");
@@ -85,20 +88,23 @@ const DashBoard = () => {
 
   const itemControls = (
     <Div>
-      <Button width="55px" height="25px" onClick={handleEvent}>
+      <Button width="55px" height="25px" onClick={e => handleEvent(e, itemsArrayLength, itemsTodayArrayLength)}>
         add
       </Button>
-      <Select getCategory={getCategory} />
+      <Select getCategory={getCategory} option={state.category} />
       <RangeInput range={state.priority} getPriorityRange={getPriorityRange} />
     </Div>
   );
 
-  const postItem = async (title, category, priority) => {
+  // TODO: move this to ItemsProvider and send out with dispatch
+  const postItem = async (title, category, priority, itemArrayLength, itemsTodayArrayLength) => {
+    console.log(itemArrayLength)
     const { uid, email, displayName, photoURL } = auth.currentUser || {};
-
     const item = {
       title,
+      index: category === 'todo - today' ? itemsTodayArrayLength + 1 : itemArrayLength + 1,
       description: "",
+      done: false,
       user: {
         uid,
         displayName,
@@ -111,11 +117,20 @@ const DashBoard = () => {
       notes: ""
     };
 
-    console.log(item);
-    firestore.collection("items").add({
-      ...item,
-      created: firebase.firestore.Timestamp.fromDate(new Date())
-    });
+    setJustAdded(item.title)
+
+    if (item.category === 'todo - today') {
+      const subCollectionRef = firestore.collection("items").doc("itemsTodoToday").collection("itemsToday");
+      subCollectionRef.add({
+        ...item,
+        created: firebase.firestore.Timestamp.fromDate(new Date())
+      })
+    } else {
+      firestore.collection("items").add({
+        ...item,
+        created: firebase.firestore.Timestamp.fromDate(new Date())
+      });
+    }
   };
 
   const handler = e => {
@@ -151,7 +166,7 @@ const DashBoard = () => {
             <Box padding="5px" width="40%">Habits from top authors</Box>
           </Box>*/}
           <Box margin="0" padding="0">
-            <BackLogItemList />
+            <BackLogItemList justAdded={justAdded} />
           </Box>
         </section>
         <section className="column">

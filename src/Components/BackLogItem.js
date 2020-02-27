@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { firestore } from "../firebase";
+import { Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from 'styled-components';
@@ -20,15 +21,30 @@ const Div = styled.div`
   align-items: center;
 `;
 
-const BackLogItem = ({ text, id, category }) => {
+const Span = styled.span`
+  min-width: 265px;
+  text-decoration: ${props => props.done ? 'line-through' : 'none'}
+`;
+
+const BackLogItem = ({ text, id, category, index, today, done, outline }) => {
 
   const inputEl = useRef(null);
   const value = useContext(ItemsContext);
-  const [inputValue, setinputValue] = useState(text);
+  const [inputValue, setinputValue] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
   const [hover, setHover] = useState(false);
-  const itemRef = firestore.doc(`items/${id}`);
-  const update = (val) => itemRef.update({ title: val });
+
+  let itemRef;
+  if (today) {
+    itemRef = firestore.collection("items").doc("itemsTodoToday").collection("itemsToday").doc(id);
+  } else {
+    itemRef = firestore.doc(`items/${id}`);
+  }
+  const update = (val) => {
+    return itemRef.update({ title: val })
+      .then(() => console.log('doc was updated, TODO: pop notification here'))
+      .catch((error) => console.error('error here!', error))
+  }
 
   const handler = e => {
     if (inputEl.current && inputEl.current.contains(e.target)) {
@@ -49,19 +65,25 @@ const BackLogItem = ({ text, id, category }) => {
   }, [showEditor]);
 
   if (showEditor) {
-    return <input ref={inputEl} type="text" value={inputValue} onChange={e => setinputValue(e.target.value)} style={{ outline: 'none', width: '100%', height: '30px', fontSize: '16px', alignItems: 'center', border: 'none', boxSizing: 'border-box', fontFamily: 'Source Sans Pro, sans-serif' }} autoFocus />
+    return <input ref={inputEl} type="text" value={inputValue === null ? text : inputValue} onChange={e => setinputValue(e.target.value)} style={{ outline: 'none', width: '100%', height: '30px', fontSize: '16px', alignItems: 'center', border: 'none', boxSizing: 'border-box', fontFamily: 'Source Sans Pro, sans-serif' }} autoFocus />
   }
 
   const limitText = (text) => text.slice(0, 40).trim() + (text.length > 20 ? "..." : "");
   return (
-    <Div
-      onClick={() => value.dispatch({ type: 'show card', payload: id })}
-      onMouseEnter={e => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
-      {limitText(text)}
-      {hover ? <> <FontAwesomeIcon onClick={() => setShowEditor(true)} icon={faPencilAlt} /><Tag category={category} onClick={() => value.dispatch({ type: 'set category', payload: category })}>{category}</Tag> <DoneAndDelete id={id} /></> : null}
-    </Div>
+    <Draggable draggableId={id} index={index}>
+      {provided => (
+        <Div
+          onMouseEnter={e => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          <Span done={done}>{limitText(text)}</Span>
+          {hover ? <> <FontAwesomeIcon onClick={() => setShowEditor(true)} icon={faPencilAlt} style={{ cursor: 'pointer', color: '#d4d7dd' }} /><Tag category={category} outline={true} onClick={() => value.dispatch({ type: 'set category', payload: category })}>{category}</Tag> <DoneAndDelete id={id} today={today} done={done} /></> : null}
+        </Div>
+      )}
+    </Draggable>
   );
 };
 

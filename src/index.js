@@ -15,8 +15,14 @@ Ideas...
   YOUR ULTIMATE FORMULA IS SOFTWARE CRAFTSMANSHIP 6-7 P/DAY, PHYSICAL CHRAFTSMAN SHIP 2-3 - AND FUCKING PUBLISH ABOUT IT - THAT'S IT, THAT'S ALL - BIT AND ATOMS
   when you write the todo, goal, etc. it can blink on then fade into either Today or General, or pop below and rocket up into, or maybe today or general blink of sorts, OR they come open as lists
   -notifications and undo when you delete
-  -EDIT!!!!!
+  DONE-EDIT!!!!! 
+  -add all the async stuff 
+  -when somebody makes a habit out of a goal, somehow show that relationship 
   -add Rewards Feature
+  -variable todos fall back into todo - backlog at end of the day if they aren't done, and done tasks are cleared
+  -add Chris's todos primer 
+  -define the terms (goal, todo, habit) ui element
+  -add tooltip for fixed and variable, variable: "just the normal todo (personal or professional) you'd have any one day", fixed: "something you want to ensure you do habitually" 
   -want to be able to add a task for tomorrow
   -clear the dropdown <-will probably resolve itself
   -code split out firebase so you you aren't getting it when 

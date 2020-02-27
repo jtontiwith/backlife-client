@@ -7,12 +7,23 @@ import Time from "./Time";
 import Select from "./Select";
 import styled from "styled-components";
 import TextArea from "./TextArea";
+import Tag from "./Tag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faObjectGroup, faSortAmountUp, faHandsHelping } from "@fortawesome/free-solid-svg-icons";
+
+
 
 const H1 = styled.h1`
   margin-top: 0px;
   font-size: 19px;
   font-weight: 600;
 `;
+
+const H3 = styled.h3`
+  font-size: 18px;
+  margin: 8px 0 5px 0;
+`;
+
 
 const Div = styled.div`
   display: flex;
@@ -29,12 +40,22 @@ const BackLogItemCard = ({ item }) => {
           <H1>{item.title}</H1>
           <Time time={item.created} />
         </Div>
-        <p>{item.description}</p>
-        <Box padding="0" margin="0" display="flex" flexDirection="row" background="#fcfcfc" flexGrow="1">
-          <Select id={item.id} option={item.category} />
-          <RangeInput id={item.id} range={item.priority} />
-          <Link to={`/items/${item.id}`}>published item</Link>
+        {/*<p> item description here at some point </p>*/}
+        <Box padding="0" margin="0" display="flex" flexDirection="row" background="#fcfcfc" alignItems="center">
+          <FontAwesomeIcon icon={faObjectGroup} style={{ fontSize: '18px', color: '#000', marginRight: '15px' }} />
+          <H3>Category</H3>
         </Box>
+        <Box padding="0" margin="0 0 12px 0" background="#fcfcfc"><Select id={item.id} option={item.category} /></Box>
+        <Box padding="0" margin="0" display="flex" flexDirection="row" background="#fcfcfc" alignItems="center">
+          <FontAwesomeIcon icon={faSortAmountUp} style={{ fontSize: '18px', color: '#000', marginRight: '15px' }} />
+          <H3>Priority</H3>
+        </Box>
+        <Box padding="0" margin="0 0 12px 0" background="#fcfcfc"><RangeInput id={item.id} range={item.priority} /></Box>
+        <Box padding="0" margin="0" display="flex" flexDirection="row" background="#fcfcfc" alignItems="center">
+          <FontAwesomeIcon icon={faHandsHelping} style={{ fontSize: '18px', color: '#000', marginRight: '15px' }} />
+          <H3>Community</H3>
+        </Box>
+        <Box padding="0" margin="0 0 32px 0" background="#fcfcfc"><Link to={`/items/${item.id}`}>publish to community</Link></Box>
         {item.category === 'goal' ? <p>create a daily fixed todo to march on this goal!</p> : null}
         <TextArea
           height="80px"
