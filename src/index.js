@@ -4,6 +4,7 @@ import App from "./Components/App";
 import { BrowserRouter as Router } from "react-router-dom";
 import ItemsProvider from "../src/Providers/ItemsProvider";
 import UserProvider from "../src/Providers/UserProvider";
+import { ModalProvider } from "../src/Providers/ModalProvider";
 import * as serviceWorker from "./serviceWorker";
 import "./index.css";
 
@@ -11,14 +12,26 @@ import "./index.css";
 habit - something you do on an ongoign basis 
 todo - 
 
+Habits...
+  -write a letter to yourself 1 per week, month, etc. give the explanation given
+  at the end of the "Spend Time Alone" chapter in Digital Minimalism
+
 Ideas...
   YOUR ULTIMATE FORMULA IS SOFTWARE CRAFTSMANSHIP 6-7 P/DAY, PHYSICAL CHRAFTSMAN SHIP 2-3 - AND FUCKING PUBLISH ABOUT IT - THAT'S IT, THAT'S ALL - BIT AND ATOMS
   when you write the todo, goal, etc. it can blink on then fade into either Today or General, or pop below and rocket up into, or maybe today or general blink of sorts, OR they come open as lists
+  -make loader circle for Today and General 
   -notifications and undo when you delete
-  DONE-EDIT!!!!! 
   -add all the async stuff 
+  -make is so you can close an item
+  -make edit controls revel progrssively 
+  -make fixed work
+  -enter to save/exit on edit
+  -be able to drag into the unopened Log
+  -clear dailes everyday into an overflow
   -when somebody makes a habit out of a goal, somehow show that relationship 
+  -take a branch, make ui as minimalist as possible
   -add Rewards Feature
+  -drag to change position of General and Today
   -variable todos fall back into todo - backlog at end of the day if they aren't done, and done tasks are cleared
   -add Chris's todos primer 
   -define the terms (goal, todo, habit) ui element
@@ -90,7 +103,9 @@ ReactDOM.render(
   <Router>
     <UserProvider>
       <ItemsProvider>
-        <App />
+        <ModalProvider>
+          <App />
+        </ModalProvider>
       </ItemsProvider>
     </UserProvider>
   </Router>,

@@ -17,6 +17,7 @@ const GenericBox = styled.div`
   bottom: ${props => (props.bottom ? props.bottom : null)};
   box-shadow: ${props => (props.boxShadow ? props.boxShadow : null)};
   display: ${props => (props.display ? props.display : null)};
+  flex-wrap: ${props => (props.flexWrap ? props.flexWrap : null)};
   flex-direction: ${props =>
     props.flexDirection ? props.flexDirection : null};
   align-self:  ${props => (props.alignSelf ? props.alignSelf : null)};
@@ -52,6 +53,7 @@ const Box = props => {
       alignItems={props.alignItems}
       alignContent={props.alignContent}
       flexGrow={props.flexGrow}
+      flexWrap={props.flexWrap}
     >
       {props.children}
     </GenericBox>

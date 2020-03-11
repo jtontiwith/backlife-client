@@ -3,7 +3,7 @@ import { firestore } from "../firebase";
 import { collectIdsAndDocs } from "../utils";
 import { UserContext } from "../Providers/UserProvider";
 
-export const ItemsContext = createContext({ items: [], itemsToday: [] });
+export const ItemsContext = createContext({ items: [], itemsToday: [], itemsFixed: [] });
 
 const reducer = (itemState, action) => {
   switch (action.type) {
@@ -11,6 +11,8 @@ const reducer = (itemState, action) => {
       return { ...itemState, items: action.payload, /*itemsToday: action.payload.filter(item => item.category === 'todo - today')*/ }
     case 'getTodaysItems':
       return { ...itemState, itemsToday: action.payload }
+    case 'getFixedItems':
+      return { ...itemState, itemsFixed: action.payload }
     case 'user null':
       return { ...action.payload }
     case 'set category':
@@ -32,11 +34,12 @@ const reducer = (itemState, action) => {
 }
 
 const ItemsProvider = ({ children }) => {
-  const [itemState, dispatch] = useReducer(reducer, { items: [], itemsToday: [], itemToShow: null, filter: null });
+  const [itemState, dispatch] = useReducer(reducer, { items: [], itemsToday: [], itemsFixed: [], itemToShow: null, filter: null });
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    if (user === null) return dispatch({ type: "user null", payload: { items: [], itemsToday: [], itemToShow: null, filter: null } });
+    // TODO: refactor collections/subcollections structure to reduce calls / simplify 
+    if (user === null) return dispatch({ type: "user null", payload: { items: [], itemsToday: [], itemsFixed: [], itemToShow: null, filter: null } });
     const unsubscribeFromFirestore = firestore
       .collection("items")
       .where("user.uid", "==", user.uid)
@@ -60,6 +63,19 @@ const ItemsProvider = ({ children }) => {
           unsubscribeFromFirestore2();
         };
       });
+
+    const unsubscribeFromFirestore3 = firestore
+      .collection("items").doc('itemsFixed').collection("itemsFixedCollection")
+      .where("user.uid", "==", user.uid)
+      .onSnapshot(snapshot => {
+        const itemsFixed = snapshot.docs.map(collectIdsAndDocs)
+        dispatch({ type: 'getFixedItems', payload: itemsFixed })
+        return function cleanup() {
+          //unsubscribeFromFirestore();
+          unsubscribeFromFirestore3();
+        };
+      });
+
 
   }, [user]);
 

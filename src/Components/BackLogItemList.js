@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { firestore } from "../firebase";
 import BackLogItem from "./BackLogItem";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import CreateHabitWidget from "./CreateHabitWidget";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { ItemsContext } from "../Providers/ItemsProvider";
+import { Modal } from "../Providers/ModalProvider";
 import styled from "styled-components";
 
 const Span = styled.span`
@@ -85,6 +87,8 @@ const BackLogItemList = ({ justAdded }) => {
     todays: false,
     general: false
   })
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filterByCategory = (item) => {
     if (value.itemState.filter === null) {
@@ -96,19 +100,22 @@ const BackLogItemList = ({ justAdded }) => {
 
   const makeGeneralEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} text={item.title} category={item.category} />
   const makeTodayEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} today={true} text={item.title} category={item.category} />
+  const makeFixedEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} fixed={true} text={item.title} category={item.category} />
 
   const onDragEnd = result => {
     //account for if they don't move
     if (result.destination.droppableId === result.source.droppableId) return;
-
     let item;
     console.log(result)
     if (result.source.droppableId === 'today') {
-      //if (result.destination.droppableId === 'today') {
       item = value.itemState.itemsToday.filter(item => item.id == result.draggableId)[0];
+      setDraggedItem(item)
     } else if (result.source.droppableId === 'general') {
       item = value.itemState.items.filter(item => item.id == result.draggableId)[0];
-    } else if (result.destination.droppableId === 'fixed') {
+      setDraggedItem(item)
+    } else if (result.source.droppableId === 'fixed') {
+      item = value.itemState.itemsFixed.filter(item => item.id == result.draggableId)[0];
+      setDraggedItem(item)
       //something <-might not need anything here just yet as the item will most
       //likely be coming from general, that's the first case anyway
     }
@@ -124,7 +131,13 @@ const BackLogItemList = ({ justAdded }) => {
       const itemRef = firestore.collection("items").doc("itemsTodoToday").collection("itemsToday").doc(result.draggableId);
       itemRef.delete();
     } else if (result.destination.droppableId === 'fixed') {
-      alert('we goin fixed!')
+      //alert('we goin fixed!')
+      setIsModalOpen(true)
+    } else if (item.category === 'habit' && result.destination.droppableId === 'general') {
+      firestore.collection("items").doc(item.id).set(item);
+      const itemRef = firestore.collection("items").doc("itemsFixed").collection("itemsFixedCollection").doc(result.draggableId);
+      itemRef.delete();
+      //pop notification 
     } else {
       alert(`You are trying to move a ${item.category} into
       a todos, you can't do that.`)
@@ -132,9 +145,12 @@ const BackLogItemList = ({ justAdded }) => {
 
   }
 
-
   const itemsArray = value.itemState.items.filter(filterByCategory).map(makeGeneralEl);
   const itemsTodayArray = value.itemState.itemsToday.map(makeTodayEl);
+  const dayOfWeek = new Date().getDay();
+  const dayArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+  console.log(dayArray[dayOfWeek])
+  const itemsFixedArray = value.itemState.itemsFixed.filter(item => item.daysToShow.includes(dayArray[dayOfWeek])).map(makeFixedEl)
 
   return (
     <>
@@ -149,7 +165,7 @@ const BackLogItemList = ({ justAdded }) => {
               fontWeight: "300"
             }}
           />
-          <P>Today's Log</P>
+          <P>Today</P>
           <Span3>{justAdded}</Span3>
         </Header>
         {showList.todays ?
@@ -161,7 +177,7 @@ const BackLogItemList = ({ justAdded }) => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  You have 0 fixed items. Find out about <a href="#">fixed items</a>.
+                  {itemsFixedArray.length === 0 ? `You have 0 fixed items. Find out about fixed items.` : itemsFixedArray}
                   {provided.placeholder}
                 </FixedLog>
               )}
@@ -182,6 +198,14 @@ const BackLogItemList = ({ justAdded }) => {
           </>
           : null}
         {/*showList.todays ? <TestDiv>{itemsTodayArray}</TestDiv> : null*/}
+        {isModalOpen && (
+          <Modal
+            onClose={() => setIsModalOpen(false)}
+            style={{ width: 600, textAlign: "center" }}
+          >
+            <CreateHabitWidget item={draggedItem} />
+          </Modal>
+        )}
         <Header>
           <FontAwesomeIcon
             icon={showList.general === false ? faPlus : faMinus}
@@ -192,7 +216,7 @@ const BackLogItemList = ({ justAdded }) => {
               fontWeight: "300"
             }}
           />
-          <P>General Log</P>
+          <P>To Come</P>
         </Header>
         {value.itemState.filter !== null && showList.general ? <Span onClick={() => value.dispatch({ type: 'unset category', payload: null })}>back</Span> : null}
         <Droppable droppableId={'general'}>
