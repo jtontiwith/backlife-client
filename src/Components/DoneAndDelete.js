@@ -22,16 +22,8 @@ const Div = styled.div`
   padding-right: 15px;
 `;
 
-const DoneAndDelete = ({ id, today, done }) => {
+const DoneAndDelete = ({ id, done, itemRef, itemType }) => {
   const value = useContext(ItemsContext);
-
-  let itemRef;
-  if (today) {
-    itemRef = firestore.collection("items").doc("itemsTodoToday").collection("itemsToday").doc(id);
-  } else {
-    console.log(id)
-    itemRef = firestore.doc(`items/${id}`);
-  }
 
   const remove = () => itemRef.delete();
   const update = () => itemRef.update({ done: !done })
@@ -41,7 +33,7 @@ const DoneAndDelete = ({ id, today, done }) => {
         <FontAwesomeIcon
           icon={faExpandArrowsAlt}
           style={{ fontSize: "23px", color: "#d4d7dd", marginRight: "6px" }}
-          onClick={() => value.dispatch({ type: 'show card', payload: { id, today } })}
+          onClick={() => value.dispatch({ type: 'show card', payload: { id, itemType, itemRef } })}
         />
       </IconContainerButton>
       <IconContainerButton>

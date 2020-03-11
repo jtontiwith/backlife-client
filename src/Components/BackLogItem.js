@@ -26,7 +26,7 @@ const Span = styled.span`
   text-decoration: ${props => props.done ? 'line-through' : 'none'}
 `;
 
-const BackLogItem = ({ text, id, category, index, today, done, outline }) => {
+const BackLogItem = ({ text, id, category, index, itemType, done }) => {
 
   const inputEl = useRef(null);
   const value = useContext(ItemsContext);
@@ -35,10 +35,14 @@ const BackLogItem = ({ text, id, category, index, today, done, outline }) => {
   const [hover, setHover] = useState(false);
 
   let itemRef;
-  if (today) {
+  //TODO: refactor this, if you name collections/subcollection in a uniform way you won't have to use conditional here / other places
+  //you should also probably hide some of this stuff away and import it
+  if (itemType === 'itemsToday') {
     itemRef = firestore.collection("items").doc("itemsTodoToday").collection("itemsToday").doc(id);
-  } else {
+  } else if (itemType === 'items') {
     itemRef = firestore.doc(`items/${id}`);
+  } else if (itemType === 'itemsFixed') {
+    itemRef = firestore.collection("items").doc('itemsFixed').collection("itemsFixedCollection").doc(id);
   }
   const update = (val) => {
     return itemRef.update({ title: val })
@@ -80,7 +84,7 @@ const BackLogItem = ({ text, id, category, index, today, done, outline }) => {
           ref={provided.innerRef}
         >
           <Span done={done}>{limitText(text)}</Span>
-          {hover ? <> <FontAwesomeIcon onClick={() => setShowEditor(true)} icon={faPencilAlt} style={{ cursor: 'pointer', color: '#d4d7dd' }} /><Tag category={category} outline={true} onClick={() => value.dispatch({ type: 'set category', payload: category })}>{category}</Tag> <DoneAndDelete id={id} today={today} done={done} /></> : null}
+          {hover ? <> <FontAwesomeIcon onClick={() => setShowEditor(true)} icon={faPencilAlt} style={{ cursor: 'pointer', color: '#d4d7dd' }} /><Tag category={category} outline={true} onClick={() => value.dispatch({ type: 'set category', payload: category })}>{category}</Tag> <DoneAndDelete id={id} itemType={itemType} itemRef={itemRef} done={done} /></> : null}
         </Div>
       )}
     </Draggable>

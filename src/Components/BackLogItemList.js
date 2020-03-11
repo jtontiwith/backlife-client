@@ -98,9 +98,9 @@ const BackLogItemList = ({ justAdded }) => {
     } //note: you filtered here b/c doing it in ItemsProvider > reducer
   } //seemed like more trouble/complexity than it was worth evem though this may be less performant 
 
-  const makeGeneralEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} text={item.title} category={item.category} />
-  const makeTodayEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} today={true} text={item.title} category={item.category} />
-  const makeFixedEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} fixed={true} text={item.title} category={item.category} />
+  const makeGeneralEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} itemType='items' text={item.title} category={item.category} />
+  const makeTodayEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} itemType='itemsToday' today={true} text={item.title} category={item.category} />
+  const makeFixedEl = (item, index) => <BackLogItem index={index} id={item.id} done={item.done} itemType='itemsFixed' fixed={true} text={item.title} category={item.category} />
 
   const onDragEnd = result => {
     //account for if they don't move
@@ -148,8 +148,7 @@ const BackLogItemList = ({ justAdded }) => {
   const itemsArray = value.itemState.items.filter(filterByCategory).map(makeGeneralEl);
   const itemsTodayArray = value.itemState.itemsToday.map(makeTodayEl);
   const dayOfWeek = new Date().getDay();
-  const dayArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-  console.log(dayArray[dayOfWeek])
+  const dayArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const itemsFixedArray = value.itemState.itemsFixed.filter(item => item.daysToShow.includes(dayArray[dayOfWeek])).map(makeFixedEl)
 
   return (

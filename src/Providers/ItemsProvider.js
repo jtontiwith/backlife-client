@@ -28,7 +28,8 @@ const reducer = (itemState, action) => {
     case 'show card':
       return {
         ...itemState,
-        itemToShow: action.payload.today ? itemState.itemsToday.filter(item => item.id === action.payload.id)[0] : itemState.items.filter(item => item.id === action.payload.id)[0]
+        itemToShow: itemState[action.payload.itemType].filter(item => item.id === action.payload.id)[0],
+        itemRef: action.payload.itemRef
       }
   }
 }

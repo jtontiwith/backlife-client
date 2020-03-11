@@ -45,7 +45,7 @@ const BackLogItemCard = ({ item }) => {
           <FontAwesomeIcon icon={faObjectGroup} style={{ fontSize: '18px', color: '#000', marginRight: '15px' }} />
           <H3>Category</H3>
         </Box>
-        <Box padding="0" margin="0 0 12px 0" background="#fcfcfc"><Select id={item.id} option={item.category} /></Box>
+        <Box padding="0" margin="0 0 12px 0" background="#fcfcfc"><Select id={item.id} item={item} option={item.category} /></Box>
         <Box padding="0" margin="0" display="flex" flexDirection="row" background="#fcfcfc" alignItems="center">
           <FontAwesomeIcon icon={faSortAmountUp} style={{ fontSize: '18px', color: '#000', marginRight: '15px' }} />
           <H3>Priority</H3>

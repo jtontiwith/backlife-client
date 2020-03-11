@@ -19,12 +19,21 @@ Habits...
 Ideas...
   YOUR ULTIMATE FORMULA IS SOFTWARE CRAFTSMANSHIP 6-7 P/DAY, PHYSICAL CHRAFTSMAN SHIP 2-3 - AND FUCKING PUBLISH ABOUT IT - THAT'S IT, THAT'S ALL - BIT AND ATOMS
   when you write the todo, goal, etc. it can blink on then fade into either Today or General, or pop below and rocket up into, or maybe today or general blink of sorts, OR they come open as lists
+  -what's the KILLER FEATURE that provide 80% of the value?
+    -can read about / grab routines, goals, etc. from popular books and follow them...  
+    -you have to strike the right balance of tool/routine AND discovery   
   -make loader circle for Today and General 
   -notifications and undo when you delete
   -add all the async stuff 
   -make is so you can close an item
   -make edit controls revel progrssively 
   -make fixed work
+  -ROSE: the daily habit
+    -play an excerpt from a podcast
+  -the balance between task tool and discovery platfrom 
+  -ROSE: "like" a habit to show interest in it but don't necessarily 
+  add the habit immediately, set it to start in X days, season, etc.
+  -ROSE: start times, priority for individual todo - todays
   -enter to save/exit on edit
   -be able to drag into the unopened Log
   -clear dailes everyday into an overflow

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
+import { ItemsContext } from "../Providers/ItemsProvider";
 import styled from "styled-components";
 import { firestore } from "../firebase";
 
@@ -15,11 +16,20 @@ const Form = styled.form``;
 
 const Option = styled.option``;
 
-const Select = ({ id, option, getCategory }) => {
-  const itemRef = firestore.doc(`items/${id}`);
+const Select = ({ item, option, getCategory }) => {
+  const value = useContext(ItemsContext);
+  //const itemRef = firestore.doc(`items/${id}`);
   const category = e => {
     if (getCategory) return getCategory(e.target.value);
-    itemRef.update({ category: e.target.value });
+
+    if (e.target.value === 'habit' || e.target.value === 'todo - today') {
+      return;
+    } else {
+      delete item.daysToshow;
+      firestore.collection("items").doc(item.id).set({ ...item, category: e.target.value });
+      value.itemState.itemRef.delete();
+    }
+    //value.itemState.itemRef.update({ category: e.target.value });
   };
 
   //set value
