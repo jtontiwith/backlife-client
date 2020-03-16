@@ -145,11 +145,12 @@ const BackLogItemList = ({ justAdded }) => {
 
   }
 
-  const itemsArray = value.itemState.items.filter(filterByCategory).map(makeGeneralEl);
-  const itemsTodayArray = value.itemState.itemsToday.map(makeTodayEl);
   const dayOfWeek = new Date().getDay();
   const dayArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  const itemsFixedArray = value.itemState.itemsFixed.filter(item => item.daysToShow.includes(dayArray[dayOfWeek])).map(makeFixedEl)
+
+  const itemsArray = value.itemState.items.filter(filterByCategory).map(makeGeneralEl);
+  const itemsTodayArray = value.itemState.itemsToday.map(makeTodayEl);
+  const itemsFixedArray = value.itemState.itemsFixed.filter(item => item.daysToShow.includes(dayArray[dayOfWeek])).map(makeFixedEl);
 
   return (
     <>
@@ -200,9 +201,9 @@ const BackLogItemList = ({ justAdded }) => {
         {isModalOpen && (
           <Modal
             onClose={() => setIsModalOpen(false)}
-            style={{ width: 600, textAlign: "center" }}
+            style={{ width: 600 }}
           >
-            <CreateHabitWidget item={draggedItem} />
+            <CreateHabitWidget setIsModalOpen={setIsModalOpen} item={draggedItem} />
           </Modal>
         )}
         <Header>
@@ -215,7 +216,7 @@ const BackLogItemList = ({ justAdded }) => {
               fontWeight: "300"
             }}
           />
-          <P>To Come</P>
+          <P>Upcoming</P>
         </Header>
         {value.itemState.filter !== null && showList.general ? <Span onClick={() => value.dispatch({ type: 'unset category', payload: null })}>back</Span> : null}
         <Droppable droppableId={'general'}>

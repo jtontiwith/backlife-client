@@ -31,6 +31,11 @@ const reducer = (itemState, action) => {
         itemToShow: itemState[action.payload.itemType].filter(item => item.id === action.payload.id)[0],
         itemRef: action.payload.itemRef
       }
+    case 'hide card':
+      return {
+        ...itemState,
+        itemToShow: null
+      }
   }
 }
 

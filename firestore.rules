@@ -4,10 +4,18 @@ service cloud.firestore {
 		match /items/{itemId} {
     	allow read;
       allow create, update : if request.auth.uid != null && request.resource.data.title != '';
-			allow delete: if request.auth.uid == resource.data.user.uid;
+			allow delete: if true; //request.auth.uid == resource.data.user.uid;
     	match /results/{resultId} {
         allow read
         allow create, update: if request.auth.uid != null;
+      }
+    	match /itemsToday/{itemId} {
+      	allow read;
+      	allow create, update, delete : if true;
+      }
+      match /itemsFixedCollection/{itemId} {
+      	allow read;
+      	allow create, update, delete : if true;
       }
     }
   	match /users/{userId} {

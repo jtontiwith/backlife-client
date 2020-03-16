@@ -1,20 +1,14 @@
 import React, { useState } from 'react';
 import Box from './Box';
+import TextArea from './TextArea';
 import GenericButton from './GenericButton';
-import Button from './Button';
 import styled from 'styled-components';
-import { firestore } from "../firebase";
+import { firestore, auth } from "../firebase";
+import firebase from "../firebase";
 
-const H2 = styled.h2`
-`
 const P = styled.p`
     margin: 0;
-`;
-
-const UL = styled.ul`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    padding: ${props => props.padding ? props.padding : '0 0 10px 0'};
 `;
 
 const CircleDiv = styled.span`
@@ -57,11 +51,7 @@ const HR = styled.hr`
 const B = styled.b`
 `;
 
-//create the item in the fixed subcollection, with the same id remember
-//delete the item from the subcollection from which it came
-
-
-const CreateHabitWidget = ({ item }) => {
+const CreateHabitWidget = ({ item, setIsModalOpen }) => {
 
     const [days, setDays] = useState([
         { day: 'sunday', abbrev: 'S', selected: false },
@@ -72,6 +62,8 @@ const CreateHabitWidget = ({ item }) => {
         { day: 'friday', abbrev: 'F', selected: false },
         { day: 'saturday', abbrev: 'S', selected: false }
     ]);
+
+    const [title, setTitle] = useState('');
 
     const [mToF, setMtoF] = useState(false)
     //TODO: the follow could probably be refactored...
@@ -105,11 +97,8 @@ const CreateHabitWidget = ({ item }) => {
         setMtoF(!mToF)
     }
 
-
-    const test = () => console.log('yo')
-
-
-    const createHabit = () => {
+    const createHabit = (title) => {
+        console.log(title)
         console.log(item)
         let itemRef;
         if (item.category === "todo - today") {
@@ -117,37 +106,81 @@ const CreateHabitWidget = ({ item }) => {
         } else {
             itemRef = firestore.doc(`items/${item.id}`);
         }
+
         const subCollectionRef = firestore.collection("items").doc("itemsFixed").collection("itemsFixedCollection");
         const daysToShow = days.filter(day => day.selected === true).map(day => day.day)
-        subCollectionRef.doc(item.id).set({ ...item, category: 'habit', daysToShow });
-        itemRef.delete();
-    }
+        if (item.category === 'goal') {
+            const { uid, email, displayName, photoURL } = auth.currentUser || {};
+            const item = {
+                title,
+                description: "",
+                done: false,
+                user: {
+                    uid,
+                    displayName,
+                    email,
+                    photoURL
+                },
+                daysToShow,
+                help: false,
+                category: 'habit',
+                priority: 0,
+                notes: ""
+            };
 
+            subCollectionRef.add({
+                ...item,
+                created: firebase.firestore.Timestamp.fromDate(new Date())
+            });
+        } else {
+            subCollectionRef.doc(item.id).set({ ...item, category: 'habit', daysToShow });
+            itemRef.delete();
+        }
+    }
+    console.log(title)
     const options = days.map((option, index) => <CircleDiv key={index} selected={option.selected} onClick={e => handleDays(e, option.day)}>{option.abbrev}</CircleDiv>)
-    if (item.category === 'habit') {
+    if (item.category !== 'goal') {
         return (
             <Box padding="0">
                 <P>Start Habit</P>
                 <HR />
-                <P>You are activating habit: {item.title} </P>
+                <P>You are turning {item.title} into a habit.</P>
                 <P>Show habit every:</P>
                 <Box display="flex" flexDirection="row" justifyContent="space-evenly">
                     {options} <Span>or</Span>
                     <MtoFControl onClick={handleMtoF} selected={mToF}>M - F</MtoFControl>
                 </Box>
-                <GenericButton onClick={createHabit}>create habit</GenericButton>
+                <GenericButton onClick={() => { createHabit(); setIsModalOpen(false); }}>create habit & close</GenericButton>
             </Box>
         );
     }
-    if (item.category === 'todo - today' || 'todo - backlog') {
+    if (item.category === 'goal') {
         return (
-            <Box padding="0">
-                <P>Start Habit</P>
-                <HR />
-                <P>Convert <B>{item.category} : {item.title}</B> to a habit:</P>
-                <UL>{options}</UL>
-                <GenericButton onClick={createHabit}>start habit</GenericButton>
-            </Box>
+            <>
+                <Box>
+                    <P padding='0px'>Start Habit</P>
+                    <HR />
+                    <P>You dragged a goal into habits. They're related, but not the same.</P>
+                    <P><B>Goal</B> - the result or achievement toward which effort is directed; aim; end.</P>
+                    <P><B>Habit</B> - the repeated, ongoing effort to attain a goal or satisfy a priority.</P>
+                    <TextArea
+                        placeholder="write the habit that will move your towards the goal..."
+                        heigth='40px'
+                        border='1px solid #eae9e9'
+                        value={title}
+                        padding='10px'
+                        margin='0 0 15px 0'
+                        onChange={e => setTitle(e.target.value)}
+                    />
+                    <P padding='0px'>Show habit every:</P>
+                    <Box display="flex" flexDirection="row" justifyContent="space-evenly">
+                        {options} <Span>or</Span>
+                        <MtoFControl onClick={handleMtoF} selected={mToF}>M - F</MtoFControl>
+                    </Box>
+                    <GenericButton onClick={() => { createHabit(title); setIsModalOpen(false); }}>create habit & close</GenericButton>
+                </Box>
+
+            </>
         )
     }
 }

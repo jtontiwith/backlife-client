@@ -41,7 +41,7 @@ const Select = ({ item, option, getCategory }) => {
 
   useEffect(() => {
     setSelect(option);
-  }, [option]);
+  }, [item]);
 
   return (
     <Form>

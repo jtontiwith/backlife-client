@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ItemsContext } from "../Providers/ItemsProvider";
-import { UserContext } from "../Providers/UserProvider";
 import { firestore, auth } from "../firebase";
 import firebase from "../firebase";
 import styled from "styled-components";
@@ -158,7 +157,8 @@ const DashBoard = () => {
             <TextArea
               value={state.value}
               placeholder="log a todo, goal, or habit..."
-              onChange={handleEvent}
+              //onChange={handleEvent}
+              onChange={e => setState({ ...state, value: e.target.value })}
             />
             {state.showControls ? itemControls : null}
           </ItemWriter>

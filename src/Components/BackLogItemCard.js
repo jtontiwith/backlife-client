@@ -1,13 +1,12 @@
-import React from "react";
-import { firestore } from "../firebase";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { ItemsContext } from "../Providers/ItemsProvider";
 import Box from "./Box";
 import RangeInput from "./RangeInput";
 import Time from "./Time";
 import Select from "./Select";
 import styled from "styled-components";
 import TextArea from "./TextArea";
-import Tag from "./Tag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faObjectGroup, faSortAmountUp, faHandsHelping } from "@fortawesome/free-solid-svg-icons";
 
@@ -31,11 +30,19 @@ const Div = styled.div`
   justify-content: space-between; 
 `;
 
+const Span = styled.span`
+  align-self: flex-end;
+  margin: -10px -5px 15px 0px;
+  cursor: pointer; 
+`;
+
 const BackLogItemCard = ({ item }) => {
+  const value = useContext(ItemsContext);
   //const itemRef = firestore.doc(`items/${item.id}`);
   return (
     <>
       <Box display="flex" flexDirection="column" padding="15px" background="#fcfcfc" margin="0px 10px 10px 25px" height="85%">
+        <Span onClick={() => value.dispatch({ type: 'hide card' })}>&#10005;</Span>
         <Div>
           <H1>{item.title}</H1>
           <Time time={item.created} />
