@@ -54,6 +54,8 @@ const Box = props => {
       alignContent={props.alignContent}
       flexGrow={props.flexGrow}
       flexWrap={props.flexWrap}
+      onMouseEnter={props.onMouseEnter}
+      onMouseOut={props.onMouseOut}
     >
       {props.children}
     </GenericBox>

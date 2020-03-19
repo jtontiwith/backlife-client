@@ -38,12 +38,12 @@ const Div = styled.div`
 
 const ItemWriter = styled.div`
   height: 50px;
-  border: 1.5px solid #eae9e9
   transition: all 0.1s linear;
   border-radius: 3px;
   padding: 10px;
   margin-bottom: 15px;
 `;
+//border: 1.5px solid #eae9e9
 
 const DashBoard = () => {
   const value = useContext(ItemsContext);

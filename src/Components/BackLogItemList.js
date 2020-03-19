@@ -1,49 +1,37 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { firestore } from "../firebase";
 import BackLogItem from "./BackLogItem";
+import Box from "./Box";
 import CreateHabitWidget from "./CreateHabitWidget";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import Tag from "./Tag";
 import { ItemsContext } from "../Providers/ItemsProvider";
 import { Modal } from "../Providers/ModalProvider";
 import styled from "styled-components";
 
 const Span = styled.span`
   color: #7e8b9c;
-  text-decoration: underline;
-  margin-bottom: 15px;
-  display: block;
-  `;
-
-const H2 = styled.h2`
-  width: 100%; 
-  text-align: center; 
-  border-bottom: 1px solid #F4F6F9; 
-  line-height: 0.1em;
-  margin: 5px 0 5px 0; 
-  font-size: 15px;
-  font-weight: 500;
-  
+  text-decoration: underline
+  font-size: 11px;
 `;
 
-const H2Span = styled.span`
-  background: #fff; 
-  padding: 0 10px; 
-  color: #c3c6c9;
+const H2 = styled.h2`
+  margin: 0;
+  padding: 0;
+  color: #7e8b9c;
+  margin-right: auto;
+  cursor: pointer;
 `;
 
 const Header = styled.header`
-  background-color: #F4F6F9;
   border-radius: 3px;
   text-align: center;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 7px 7px 7px 7px;
-  margin-bottom: 15px;
   `;
+//background-color: #F4F6F9;
 
 //https://reactjs.org/docs/animation.html
 const Span3 = styled.span`
@@ -60,14 +48,27 @@ const Span3 = styled.span`
 `;
 
 const P = styled.p`
-  font-size: 20px;
+  font-size: 35px;
+  font-weight: 600;
+  cursor: pointer;
   padding: 0;
-  margin 0 0 0 15px;
+  margin 0;
 `;
 
 const Div = styled.div`
-  padding: 13px 0 13px 0;
 `;
+
+const FlexDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  height: 46px;
+`;
+//display='flex' flexDirection='row' alignItems='center' margin='0' padding='0' border='1px solid black' height='46px'
+
+// padding: 13px 0 13px 0;
 
 const VariableLog = React.forwardRef(({ children }, ref) => {
   return <Div ref={ref}>{children}</Div>
@@ -82,6 +83,7 @@ const FixedLog = React.forwardRef(({ children }, ref) => {
 })
 
 const BackLogItemList = ({ justAdded }) => {
+  const showCategoriesRef = useRef(null);
   const value = useContext(ItemsContext);
   const [showList, setShowList] = useState({
     todays: false,
@@ -89,6 +91,7 @@ const BackLogItemList = ({ justAdded }) => {
   })
   const [draggedItem, setDraggedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
 
   const filterByCategory = (item) => {
     if (value.itemState.filter === null) {
@@ -148,41 +151,55 @@ const BackLogItemList = ({ justAdded }) => {
   const dayOfWeek = new Date().getDay();
   const dayArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
+  //arrays of items
   const itemsArray = value.itemState.items.filter(filterByCategory).map(makeGeneralEl);
   const itemsTodayArray = value.itemState.itemsToday.map(makeTodayEl);
   const itemsFixedArray = value.itemState.itemsFixed.filter(item => item.daysToShow.includes(dayArray[dayOfWeek])).map(makeFixedEl);
+
+  const categoryTags = ['todo - backlog', 'goal', 'habit', 'other'].map((category, index) => <Tag key={index} category={category} outline={true}>{category}</Tag>)
+
+  const handler = e => {
+    //TODO: this works, but check if it taxing the dom hardcore
+    if (showCategoriesRef.current !== null && showCategoriesRef.current.contains(e.target)) {
+      setShowCategories(true);
+    } else if (showCategoriesRef.current !== null && !showCategoriesRef.current.contains(e.target)) {
+      setShowCategories(false);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("mouseover", handler);
+    return () => {
+      window.removeEventListener("mouseover", handler);
+    };
+  }, [showList.general]);
+
 
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
         <Header>
-          <FontAwesomeIcon
-            icon={showList.todays === false ? faPlus : faMinus}
-            onClick={() => setShowList({ ...showList, todays: !showList.todays })}
-            style={{
-              color: "#000",
-              fontSize: "35px",
-              fontWeight: "300"
-            }}
-          />
-          <P>Today</P>
-          <Span3>{justAdded}</Span3>
+          <P onClick={() => setShowList({ ...showList, todays: !showList.todays })}>
+            Today
+          </P>
         </Header>
         {showList.todays ?
-          <>
-            <H2><H2Span>fixed habits</H2Span></H2>
-            <Droppable droppableId={'fixed'}>
-              {provided => (
-                <FixedLog
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {itemsFixedArray.length === 0 ? `You have 0 fixed items. Find out about fixed items.` : itemsFixedArray}
-                  {provided.placeholder}
-                </FixedLog>
-              )}
-            </Droppable>
-            <H2><H2Span>variable todos</H2Span></H2>
+          <Box padding="0px 0px 0px 30px" margin="0">
+            <Box padding="0" margin="5px 0 15px 0">
+              <H2>Habits</H2>
+              <Droppable droppableId={'fixed'}>
+                {provided => (
+                  <FixedLog
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    {itemsFixedArray.length === 0 ? `You have 0 fixed items. Find out about fixed items.` : itemsFixedArray}
+                    {provided.placeholder}
+                  </FixedLog>
+                )}
+              </Droppable>
+            </Box>
+            <H2>Todos</H2>
             <Droppable droppableId={'today'}>
               {provided => (
                 <VariableLog
@@ -194,8 +211,7 @@ const BackLogItemList = ({ justAdded }) => {
                 </VariableLog>
               )}
             </Droppable>
-
-          </>
+          </Box>
           : null}
         {/*showList.todays ? <TestDiv>{itemsTodayArray}</TestDiv> : null*/}
         {isModalOpen && (
@@ -207,25 +223,26 @@ const BackLogItemList = ({ justAdded }) => {
           </Modal>
         )}
         <Header>
-          <FontAwesomeIcon
-            icon={showList.general === false ? faPlus : faMinus}
-            onClick={() => setShowList({ ...showList, general: !showList.general })}
-            style={{
-              color: "#000",
-              fontSize: "35px",
-              fontWeight: "300"
-            }}
-          />
-          <P>Upcoming</P>
+          <P onClick={() => setShowList({ ...showList, general: !showList.general })}>
+            Upcoming
+          </P>
         </Header>
-        {value.itemState.filter !== null && showList.general ? <Span onClick={() => value.dispatch({ type: 'unset category', payload: null })}>back</Span> : null}
         <Droppable droppableId={'general'}>
           {provided => (
             <GeneralLog
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {showList.general ? itemsArray : null}
+              {showList.general ?
+                <Box padding="0px 0px 0px 30px" margin="0">
+                  <FlexDiv ref={showCategoriesRef}>
+                    <H2>{value.itemState.filter ? value.itemState.filter : 'All'}</H2>
+                    {showCategories ? categoryTags : null}
+                    {value.itemState.filter !== null && showList.general ? <Span onClick={() => value.dispatch({ type: 'unset category', payload: null })}>back</Span> : null}
+                  </FlexDiv>
+                  {itemsArray}
+                </Box>
+                : null}
               {provided.placeholder}
             </GeneralLog>
           )}

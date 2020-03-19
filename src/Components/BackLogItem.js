@@ -4,9 +4,9 @@ import { Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import styled from 'styled-components';
-import { ItemsContext } from "../Providers/ItemsProvider";
 import DoneAndDelete from "./DoneAndDelete";
-import Tag from "./Tag";
+//import Tag from "./Tag";
+//<Tag category={category} outline={true}>{category}</Tag>
 
 const Div = styled.div`
   min-width: 138px;
@@ -19,6 +19,7 @@ const Div = styled.div`
   width: 100%;
   height: 30px;
   align-items: center;
+  padding-left: 20px;
 `;
 
 const Span = styled.span`
@@ -27,9 +28,7 @@ const Span = styled.span`
 `;
 
 const BackLogItem = ({ text, id, category, index, itemType, done }) => {
-
   const inputEl = useRef(null);
-  const value = useContext(ItemsContext);
   const [inputValue, setinputValue] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
   const [hover, setHover] = useState(false);
@@ -83,8 +82,8 @@ const BackLogItem = ({ text, id, category, index, itemType, done }) => {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <Span done={done}>{limitText(text)}</Span>
-          {hover ? <> <FontAwesomeIcon onClick={() => setShowEditor(true)} icon={faPencilAlt} style={{ cursor: 'pointer', color: '#d4d7dd' }} /><Tag category={category} outline={true} onClick={() => value.dispatch({ type: 'set category', payload: category })}>{category}</Tag> <DoneAndDelete id={id} itemType={itemType} itemRef={itemRef} done={done} /></> : null}
+          <Span done={done}>- {limitText(text)}</Span>
+          {hover ? <> <FontAwesomeIcon onClick={() => setShowEditor(true)} icon={faPencilAlt} style={{ cursor: 'pointer', color: '#d4d7dd' }} /><DoneAndDelete id={id} itemType={itemType} itemRef={itemRef} done={done} /></> : null}
         </Div>
       )}
     </Draggable>
