@@ -51,8 +51,8 @@ const HR = styled.hr`
 const B = styled.b`
 `;
 
-const CreateHabitWidget = ({ item, setIsModalOpen }) => {
-
+const CreateHabitWidget = ({ item, setIsModalOpen, showInCard }) => {
+    console.log(item)
     const [days, setDays] = useState([
         { day: 'sunday', abbrev: 'S', selected: false },
         { day: 'monday', abbrev: 'M', selected: false },
@@ -64,8 +64,8 @@ const CreateHabitWidget = ({ item, setIsModalOpen }) => {
     ]);
 
     const [title, setTitle] = useState('');
-
     const [mToF, setMtoF] = useState(false)
+
     //TODO: the follow could probably be refactored...
     const handleDays = (e, option) => {
         const modifiedDays = days.map(day => {
@@ -108,7 +108,7 @@ const CreateHabitWidget = ({ item, setIsModalOpen }) => {
         }
 
         const subCollectionRef = firestore.collection("items").doc("itemsFixed").collection("itemsFixedCollection");
-        const daysToShow = days.filter(day => day.selected === true).map(day => day.day)
+        //const daysToShow = days.filter(day => day.selected === true).map(day => day)
         if (item.category === 'goal') {
             const { uid, email, displayName, photoURL } = auth.currentUser || {};
             const item = {
@@ -121,7 +121,7 @@ const CreateHabitWidget = ({ item, setIsModalOpen }) => {
                     email,
                     photoURL
                 },
-                daysToShow,
+                daysToShow: days,
                 help: false,
                 category: 'habit',
                 priority: 0,
@@ -133,12 +133,41 @@ const CreateHabitWidget = ({ item, setIsModalOpen }) => {
                 created: firebase.firestore.Timestamp.fromDate(new Date())
             });
         } else {
-            subCollectionRef.doc(item.id).set({ ...item, category: 'habit', daysToShow });
+            subCollectionRef.doc(item.id).set({ ...item, category: 'habit', daysToShow: days });
             itemRef.delete();
         }
     }
-    console.log(title)
-    const options = days.map((option, index) => <CircleDiv key={index} selected={option.selected} onClick={e => handleDays(e, option.day)}>{option.abbrev}</CircleDiv>)
+
+    const updateDayToShow = (option) => {
+        console.log(option)
+        const itemRef = firestore.collection("items").doc('itemsFixed').collection("itemsFixedCollection").doc(item.id);
+        const updatedDaysToShow = item.daysToShow.map(dayToShow => {
+            if (dayToShow.day === option.day) return option;
+            return dayToShow;
+        })
+        console.log(updatedDaysToShow)
+        itemRef.update({ daysToShow: updatedDaysToShow })
+    }
+
+
+    let options;
+    if (item.daysToShow) {
+        options = item.daysToShow.map((option, index) => {
+            return <CircleDiv key={index} selected={option.selected} onClick={e => updateDayToShow({ ...option, selected: !option.selected })}>{option.abbrev}</CircleDiv>
+        })
+    } else {
+        options = days.map((option, index) => <CircleDiv key={index} selected={option.selected} onClick={e => handleDays(e, option.day)}>{option.abbrev}</CircleDiv>)
+    }
+
+    if (item.daysToShow) {
+        return (
+            <Box padding="0">
+                <Box display="flex" flexDirection="row" justifyContent="space-evenly">
+                    {options}
+                </Box>
+            </Box>
+        );
+    }
     if (item.category !== 'goal') {
         return (
             <Box padding="0">
@@ -179,7 +208,6 @@ const CreateHabitWidget = ({ item, setIsModalOpen }) => {
                     </Box>
                     <GenericButton onClick={() => { createHabit(title); setIsModalOpen(false); }}>create habit & close</GenericButton>
                 </Box>
-
             </>
         )
     }

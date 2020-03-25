@@ -25,6 +25,9 @@ Ideas...
   -make loader circle for Today and General 
   -notifications and undo when you delete
   -add all the async stuff 
+  -scratch pad?
+    -...or a "to learn about" 
+      -maybe this is a feature too far and is actually another app 
   -make is so you can close an item
   -make edit controls revel progrssively 
   -make fixed work

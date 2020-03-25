@@ -86,8 +86,8 @@ const BackLogItemList = ({ justAdded }) => {
   const showCategoriesRef = useRef(null);
   const value = useContext(ItemsContext);
   const [showList, setShowList] = useState({
-    todays: false,
-    general: false
+    todays: true,
+    general: true
   })
   const [draggedItem, setDraggedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -150,12 +150,10 @@ const BackLogItemList = ({ justAdded }) => {
 
   const dayOfWeek = new Date().getDay();
   const dayArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-
   //arrays of items
   const itemsArray = value.itemState.items.filter(filterByCategory).map(makeGeneralEl);
   const itemsTodayArray = value.itemState.itemsToday.map(makeTodayEl);
-  const itemsFixedArray = value.itemState.itemsFixed.filter(item => item.daysToShow.includes(dayArray[dayOfWeek])).map(makeFixedEl);
-
+  const itemsFixedArray = value.itemState.itemsFixed.filter(item => item.daysToShow.some(day => day.day === dayArray[dayOfWeek] && day.selected === true)).map(makeFixedEl);
   const categoryTags = ['todo - backlog', 'goal', 'habit', 'other'].map((category, index) => <Tag key={index} category={category} outline={true}>{category}</Tag>)
 
   const handler = e => {
@@ -237,7 +235,7 @@ const BackLogItemList = ({ justAdded }) => {
                 <Box padding="0px 0px 0px 30px" margin="0">
                   <FlexDiv ref={showCategoriesRef}>
                     <H2>{value.itemState.filter ? value.itemState.filter : 'All'}</H2>
-                    {showCategories ? categoryTags : null}
+                    {showCategories === true ? categoryTags : null}
                     {value.itemState.filter !== null && showList.general ? <Span onClick={() => value.dispatch({ type: 'unset category', payload: null })}>back</Span> : null}
                   </FlexDiv>
                   {itemsArray}

@@ -5,6 +5,7 @@ import Box from "./Box";
 import RangeInput from "./RangeInput";
 import Time from "./Time";
 import Select from "./Select";
+import CreateHabitWidget from "./CreateHabitWidget";
 import styled from "styled-components";
 import TextArea from "./TextArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -63,6 +64,7 @@ const BackLogItemCard = ({ item }) => {
           <H3>Community</H3>
         </Box>
         <Box padding="0" margin="0 0 32px 0" background="#fcfcfc"><Link to={`/items/${item.id}`}>publish to community</Link></Box>
+        {item.daysToShow ? <CreateHabitWidget item={item} /> : null}
         {item.category === 'goal' ? <p>create a daily fixed todo to march on this goal!</p> : null}
         <TextArea
           height="80px"

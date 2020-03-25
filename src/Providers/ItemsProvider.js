@@ -36,6 +36,17 @@ const reducer = (itemState, action) => {
         ...itemState,
         itemToShow: null
       }
+    case 'show card':
+      return {
+        ...itemState,
+        itemToShow: itemState[action.payload.itemType].filter(item => item.id === action.payload.id)[0],
+        itemRef: action.payload.itemRef
+      }
+    case 'refresh card':
+      return {
+        ...itemState,
+        itemToShow: itemState.itemToShow !== null ? itemState['itemsFixed'].filter(item => item.id === itemState.itemToShow.id)[0] : null
+      }
   }
 }
 
@@ -75,7 +86,9 @@ const ItemsProvider = ({ children }) => {
       .where("user.uid", "==", user.uid)
       .onSnapshot(snapshot => {
         const itemsFixed = snapshot.docs.map(collectIdsAndDocs)
+        console.log(itemsFixed)
         dispatch({ type: 'getFixedItems', payload: itemsFixed })
+        dispatch({ type: 'refresh card' })
         return function cleanup() {
           //unsubscribeFromFirestore();
           unsubscribeFromFirestore3();

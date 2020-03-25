@@ -157,7 +157,6 @@ const DashBoard = () => {
             <TextArea
               value={state.value}
               placeholder="log a todo, goal, or habit..."
-              //onChange={handleEvent}
               onChange={e => setState({ ...state, value: e.target.value })}
             />
             {state.showControls ? itemControls : null}
